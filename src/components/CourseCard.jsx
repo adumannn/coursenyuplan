@@ -1,39 +1,29 @@
-import CourseCard from './CourseCard';
-import { MAX_CREDITS_PER_SEMESTER } from '../data/courses';
+import { CATEGORIES } from '../data/courses';
 
-export default function SemesterCard({ semester, courses, credits, onRemoveCourse, onAddClick }) {
-  const overloaded = credits > MAX_CREDITS_PER_SEMESTER;
+export default function CourseCard({ course, semesterId, onRemove, compact }) {
+  const categoryColor =
+    CATEGORIES[course.category]?.color || CATEGORIES.elective.color;
 
   return (
-    <div className={`semester-card ${overloaded ? 'semester-card--overloaded' : ''}`}>
-      <div className="semester-card-header">
-        <h3 className="semester-card-title">{semester.label}</h3>
-        <span className={`semester-card-credits ${overloaded ? 'credits--warning' : ''}`}>
-          {credits} credits
-          {overloaded && <span className="credits-warning-icon" title={`Exceeds ${MAX_CREDITS_PER_SEMESTER} credit limit`}> ⚠</span>}
-        </span>
+    <div className={`course-card ${compact ? 'course-card--compact' : ''}`}>
+      <div
+        className="course-card-color"
+        style={{ backgroundColor: categoryColor }}
+      />
+      <div className="course-card-content">
+        <div className="course-card-header">
+          <span className="course-card-code">{course.code}</span>
+          <span className="course-card-credits">{course.credits} cr</span>
+        </div>
+        <div className="course-card-name">{course.name}</div>
       </div>
-
-      <div className="semester-card-courses">
-        {courses.length === 0 ? (
-          <div className="semester-card-empty">
-            <span>No courses added yet</span>
-          </div>
-        ) : (
-          courses.map(course => (
-            <CourseCard
-              key={course.id}
-              course={course}
-              semesterId={semester.id}
-              onRemove={onRemoveCourse}
-              compact
-            />
-          ))
-        )}
-      </div>
-
-      <button className="semester-add-btn" onClick={() => onAddClick(semester.id)}>
-        + Add Course
+      <button
+        className="course-card-remove"
+        onClick={() => onRemove(semesterId, course.id)}
+        title="Remove course"
+        aria-label={`Remove ${course.code}`}
+      >
+        ✕
       </button>
     </div>
   );

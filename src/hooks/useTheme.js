@@ -7,8 +7,12 @@ export default function useTheme() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored === 'dark' || stored === 'light') return stored;
-    } catch (e) { /* ignore */ }
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } catch {
+      // Ignore localStorage errors
+    }
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
   });
 
   useEffect(() => {
@@ -17,7 +21,7 @@ export default function useTheme() {
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
-    setTheme(t => t === 'light' ? 'dark' : 'light');
+    setTheme((t) => (t === 'light' ? 'dark' : 'light'));
   }, []);
 
   return { theme, toggleTheme };

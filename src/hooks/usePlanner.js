@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { SEMESTERS, COURSE_CATALOG, CORE_REQUIREMENTS, MAJOR_REQUIREMENTS, GRADUATION_CREDITS } from '../data/courses';
+import {
+  SEMESTERS,
+  COURSE_CATALOG,
+  CORE_REQUIREMENTS,
+  MAJOR_REQUIREMENTS,
+  GRADUATION_CREDITS,
+} from '../data/courses';
 
 const STORAGE_KEY = 'nyu-shanghai-course-planner';
 
@@ -23,7 +29,9 @@ function saveToStorage(data) {
 
 function createEmptyPlan() {
   const plan = {};
-  SEMESTERS.forEach(s => { plan[s.id] = []; });
+  SEMESTERS.forEach((s) => {
+    plan[s.id] = [];
+  });
   return plan;
 }
 
@@ -32,7 +40,9 @@ export default function usePlanner() {
 
   const [plan, setPlan] = useState(() => stored?.plan || createEmptyPlan());
   const [major, setMajor] = useState(() => stored?.major || 'cs');
-  const [studentName, setStudentName] = useState(() => stored?.studentName || '');
+  const [studentName, setStudentName] = useState(
+    () => stored?.studentName || '',
+  );
 
   // Persist to localStorage on changes
   useEffect(() => {
@@ -40,37 +50,37 @@ export default function usePlanner() {
   }, [plan, major, studentName]);
 
   const addCourse = useCallback((semesterId, course) => {
-    setPlan(prev => {
+    setPlan((prev) => {
       const semCourses = prev[semesterId] || [];
       // Don't add duplicates in same semester
-      if (semCourses.some(c => c.id === course.id)) return prev;
+      if (semCourses.some((c) => c.id === course.id)) return prev;
       return { ...prev, [semesterId]: [...semCourses, course] };
     });
   }, []);
 
   const removeCourse = useCallback((semesterId, courseId) => {
-    setPlan(prev => ({
+    setPlan((prev) => ({
       ...prev,
-      [semesterId]: (prev[semesterId] || []).filter(c => c.id !== courseId),
+      [semesterId]: (prev[semesterId] || []).filter((c) => c.id !== courseId),
     }));
   }, []);
 
   const moveCourse = useCallback((fromSemester, toSemester, courseId) => {
-    setPlan(prev => {
-      const course = (prev[fromSemester] || []).find(c => c.id === courseId);
+    setPlan((prev) => {
+      const course = (prev[fromSemester] || []).find((c) => c.id === courseId);
       if (!course) return prev;
       // Don't add duplicates
-      if ((prev[toSemester] || []).some(c => c.id === courseId)) return prev;
+      if ((prev[toSemester] || []).some((c) => c.id === courseId)) return prev;
       return {
         ...prev,
-        [fromSemester]: prev[fromSemester].filter(c => c.id !== courseId),
+        [fromSemester]: prev[fromSemester].filter((c) => c.id !== courseId),
         [toSemester]: [...(prev[toSemester] || []), course],
       };
     });
   }, []);
 
   const clearSemester = useCallback((semesterId) => {
-    setPlan(prev => ({ ...prev, [semesterId]: [] }));
+    setPlan((prev) => ({ ...prev, [semesterId]: [] }));
   }, []);
 
   const clearAll = useCallback(() => {
@@ -90,7 +100,7 @@ export default function usePlanner() {
   // Credits per semester
   const semesterCredits = useMemo(() => {
     const credits = {};
-    SEMESTERS.forEach(s => {
+    SEMESTERS.forEach((s) => {
       credits[s.id] = (plan[s.id] || []).reduce((sum, c) => sum + c.credits, 0);
     });
     return credits;
@@ -101,8 +111,10 @@ export default function usePlanner() {
     const progress = {};
 
     // Core requirements
-    CORE_REQUIREMENTS.forEach(req => {
-      const courses = allPlannedCourses.filter(c => c.category === req.category);
+    CORE_REQUIREMENTS.forEach((req) => {
+      const courses = allPlannedCourses.filter(
+        (c) => c.category === req.category,
+      );
       progress[req.id] = {
         ...req,
         coursesTaken: courses.length,
@@ -113,7 +125,9 @@ export default function usePlanner() {
 
     // Major requirements
     const majorReq = MAJOR_REQUIREMENTS[major] || MAJOR_REQUIREMENTS.custom;
-    const majorCourses = allPlannedCourses.filter(c => c.category === 'major');
+    const majorCourses = allPlannedCourses.filter(
+      (c) => c.category === 'major',
+    );
     progress['major'] = {
       id: 'major',
       label: majorReq.label,
@@ -125,7 +139,9 @@ export default function usePlanner() {
     };
 
     // Elective credits (everything that doesn't fit above)
-    const electiveCourses = allPlannedCourses.filter(c => c.category === 'elective');
+    const electiveCourses = allPlannedCourses.filter(
+      (c) => c.category === 'elective',
+    );
     progress['electives'] = {
       id: 'electives',
       label: 'Free Electives',
@@ -137,9 +153,12 @@ export default function usePlanner() {
   }, [allPlannedCourses, major]);
 
   // Check if a course is already planned somewhere
-  const isCourseInPlan = useCallback((courseId) => {
-    return allPlannedCourses.some(c => c.id === courseId);
-  }, [allPlannedCourses]);
+  const isCourseInPlan = useCallback(
+    (courseId) => {
+      return allPlannedCourses.some((c) => c.id === courseId);
+    },
+    [allPlannedCourses],
+  );
 
   return {
     plan,

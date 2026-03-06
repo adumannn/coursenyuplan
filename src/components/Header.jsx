@@ -1,6 +1,15 @@
-import { MAJORS, GRADUATION_CREDITS } from "../data/courses";
+import { MAJORS, GRADUATION_CREDITS } from '../data/courses';
 
-export default function Header({ major, setMajor, studentName, setStudentName, totalCredits, onClearAll, theme, toggleTheme }) {
+export default function Header({
+  major,
+  setMajor,
+  studentName,
+  setStudentName,
+  totalCredits,
+  onClearAll,
+  theme,
+  toggleTheme,
+}) {
   return (
     <header className="header">
       <div className="header-left">
@@ -31,21 +40,36 @@ export default function Header({ major, setMajor, studentName, setStudentName, t
             type="text"
             placeholder="Your name"
             value={studentName}
-            onChange={e => setStudentName(e.target.value)}
+            onChange={(e) => setStudentName(e.target.value)}
           />
         </div>
         <div className="header-field">
           <label htmlFor="major-select">Major</label>
-          <select id="major-select" value={major} onChange={e => setMajor(e.target.value)}>
-            {MAJORS.map(m => (
-              <option key={m.id} value={m.id}>{m.label}</option>
+          <select
+            id="major-select"
+            value={major}
+            onChange={(e) => setMajor(e.target.value)}
+          >
+            {MAJORS.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.label}
+              </option>
             ))}
           </select>
         </div>
-        <button className="btn-theme" onClick={toggleTheme} title="Toggle theme" aria-label="Toggle theme">
+        <button
+          className="btn-theme"
+          onClick={toggleTheme}
+          title="Toggle theme"
+          aria-label="Toggle theme"
+        >
           {theme === 'light' ? '☾' : '☀'}
         </button>
-        <button className="btn-clear-all" onClick={onClearAll} title="Clear all courses">
+        <button
+          className="btn-clear-all"
+          onClick={onClearAll}
+          title="Clear all courses"
+        >
           Reset
         </button>
       </div>
