@@ -1,8 +1,12 @@
-import { MAJORS, GRADUATION_CREDITS } from '../data/courses';
+import { useState } from 'react';
+import { MAJORS, AVAILABLE_MINORS, GRADUATION_CREDITS } from '../data/courses';
 
 export default function Header({
   major,
   setMajor,
+  selectedMinors,
+  addMinor,
+  removeMinor,
   studentName,
   setStudentName,
   totalCredits,
@@ -10,6 +14,11 @@ export default function Header({
   theme,
   toggleTheme,
 }) {
+  const [minorDropdownOpen, setMinorDropdownOpen] = useState(false);
+  const availableToAdd = AVAILABLE_MINORS.filter(
+    (m) => !selectedMinors.includes(m.id),
+  );
+
   return (
     <header className="header">
       <div className="header-left">
@@ -56,6 +65,56 @@ export default function Header({
               </option>
             ))}
           </select>
+        </div>
+        <div className="header-field minor-field">
+          <label>Minor</label>
+          <div className="minor-picker">
+            {selectedMinors.map((minorId) => {
+              const minor = AVAILABLE_MINORS.find((m) => m.id === minorId);
+              return (
+                <span key={minorId} className="minor-chip">
+                  {minor?.label || minorId}
+                  <button
+                    className="minor-chip-remove"
+                    onClick={() => removeMinor(minorId)}
+                    aria-label={`Remove ${minor?.label || minorId} minor`}
+                  >
+                    ×
+                  </button>
+                </span>
+              );
+            })}
+            {availableToAdd.length > 0 && (
+              <div className="minor-add-wrapper">
+                <button
+                  className="minor-add-btn"
+                  onClick={() => setMinorDropdownOpen((o) => !o)}
+                  aria-label="Add minor"
+                >
+                  +
+                </button>
+                {minorDropdownOpen && (
+                  <div className="minor-dropdown">
+                    {availableToAdd.map((m) => (
+                      <button
+                        key={m.id}
+                        className="minor-dropdown-item"
+                        onClick={() => {
+                          addMinor(m.id);
+                          setMinorDropdownOpen(false);
+                        }}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            {selectedMinors.length === 0 && availableToAdd.length > 0 && (
+              <span className="minor-placeholder">None</span>
+            )}
+          </div>
         </div>
         <button
           className="btn-theme"

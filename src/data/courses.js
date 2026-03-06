@@ -1,4 +1,5 @@
-// NYU Shanghai Course Catalog & Requirements Data
+// NYU Shanghai Course Planner — Data
+// Based on AY 2025-26 Academic Bulletin (CS Major)
 
 export const CATEGORIES = {
   core: { label: 'Core', color: '#57068c' },
@@ -10,46 +11,72 @@ export const CATEGORIES = {
 };
 
 export const SEMESTERS = [
-  { id: 'Y1-Fall', label: 'Year 1 — Fall', year: 1 },
-  { id: 'Y1-Spring', label: 'Year 1 — Spring', year: 1 },
-  { id: 'Y2-Fall', label: 'Year 2 — Fall', year: 2 },
-  { id: 'Y2-Spring', label: 'Year 2 — Spring', year: 2 },
-  { id: 'Y3-Fall', label: 'Year 3 — Fall', year: 3 },
-  { id: 'Y3-Spring', label: 'Year 3 — Spring', year: 3 },
-  { id: 'Y4-Fall', label: 'Year 4 — Fall', year: 4 },
-  { id: 'Y4-Spring', label: 'Year 4 — Spring', year: 4 },
+  { id: 'Y1-Fall', label: 'Year 1 — Fall', year: 1, location: 'Shanghai' },
+  { id: 'Y1-Spring', label: 'Year 1 — Spring', year: 1, location: 'Shanghai' },
+  { id: 'Y2-Fall', label: 'Year 2 — Fall', year: 2, location: 'Shanghai' },
+  { id: 'Y2-Spring', label: 'Year 2 — Spring', year: 2, location: 'Shanghai' },
+  { id: 'Y3-Fall', label: 'Year 3 — Fall', year: 3, studyAwayEligible: true },
+  {
+    id: 'Y3-Spring',
+    label: 'Year 3 — Spring',
+    year: 3,
+    studyAwayEligible: true,
+  },
+  { id: 'Y4-Fall', label: 'Year 4 — Fall', year: 4, studyAwayEligible: true },
+  { id: 'Y4-Spring', label: 'Year 4 — Spring', year: 4, location: 'Shanghai' },
 ];
+
+export const STUDY_AWAY = {
+  maxSemesters: 2,
+  eligibleSemesters: ['Y3-Fall', 'Y3-Spring', 'Y4-Fall'],
+  locations: ['Shanghai', 'New York', 'Abu Dhabi', 'Paris', 'Sydney'],
+  maxMajorCoursesPerSemester: 3,
+  notes: [
+    'Before studying abroad, CS students should complete: ICS, Data Structures, Probability & Statistics, Computer Architecture, and ideally Algorithms.',
+    'Students can take a maximum of 3 courses within the same major discipline during study away.',
+    'Students who plan to study in New York should follow the registration guide from the Global Programs New York Office (gpnyc@nyu.edu).',
+    'CS/DS courses in New York are at Courant (CAS) or Tandon. Seats may be limited and prioritized for NYU New York students.',
+    'Graduate-level Tandon CS courses are not open to undergraduates.',
+    'Two semesters in New York requires an advising appointment and proposal with compelling academic rationale.',
+  ],
+};
 
 export const MAJORS = [
   { id: 'cs', label: 'Computer Science' },
-  { id: 'ds', label: 'Data Science' },
-  { id: 'econ', label: 'Economics' },
-  { id: 'business', label: 'Business and Finance' },
-  { id: 'math', label: 'Honors Mathematics' },
+  // TODO: implement remaining majors
+  // { id: 'ds', label: 'Data Science' },
+  // { id: 'econ', label: 'Economics' },
+  // { id: 'business', label: 'Business and Finance' },
+  // { id: 'math', label: 'Honors Mathematics' },
+];
+
+export const AVAILABLE_MINORS = [
+  { id: 'math', label: 'Mathematics' },
+  // Add more minors here as needed. just google the name of your"major/minor" + "nyu shanghai course requirements" and fill in the details in the MINOR_REQUIREMENTS object below.
 ];
 
 export const GRADUATION_CREDITS = 128;
 export const MAX_CREDITS_PER_SEMESTER = 18;
 export const MIN_CREDITS_PER_SEMESTER = 12;
 
-// requirements that every student must fulfill
+// Core curriculum — every student must fulfill
 export const CORE_REQUIREMENTS = [
   {
     id: 'social-and-cultural-foundations',
     label: 'Social and Cultural Foundations',
     category: 'gps',
-    coursesNeeded: 4,
-    creditsNeeded: 16,
+    coursesNeeded: 3,
+    creditsNeeded: 12,
     subcourses: [
-      { code: 'CCSF-SHU 101', name: 'Global Perspectives on Society (GPS)' },
-      { code: 'WRIT-SHU 201', name: 'Perspectives on the Humanities (PoH)*' },
       {
-        code: 'IPC 1',
-        name: 'Interdisciplinary Perspectives on China (IPC) 1',
+        code: 'CCSF-SHU 101L',
+        name: 'Global Perspectives on Society (GPS)',
+        credits: 4,
       },
       {
-        code: 'IPC 2',
-        name: 'Interdisciplinary Perspectives on China (IPC) 2',
+        code: 'IPC',
+        name: 'Interdisciplinary Perspectives on China — 2 courses',
+        credits: 8,
       },
     ],
   },
@@ -57,13 +84,35 @@ export const CORE_REQUIREMENTS = [
     id: 'writing',
     label: 'Writing',
     category: 'writing',
-    coursesNeeded: 1,
-    creditsNeeded: 4,
+    coursesNeeded: 2,
+    creditsNeeded: 8,
     subcourses: [
-      { code: 'WRIT-SHU 101/102', name: 'Writing as Inquiry (WAI)' },
+      { code: 'WRIT-SHU 102', name: 'Writing as Inquiry (WAI)', credits: 4 },
+      {
+        code: 'WRIT-SHU 201',
+        name: 'Perspectives on the Humanities (PoH)',
+        credits: 4,
+      },
     ],
-    notes:
-      'Perspectives on the Humanities (PoH)* is shared with Social and Cultural Foundations',
+  },
+  {
+    id: 'language',
+    label: 'Language',
+    category: 'language',
+    coursesNeeded: 2,
+    creditsNeeded: 8,
+    subcourses: [
+      {
+        code: 'ENGL-SHU 100/101',
+        name: 'For Chinese students: English for Academic Purposes (EAP)',
+        credits: 8,
+      },
+      {
+        code: 'CHIN-SHU 101–202',
+        name: 'For non-Chinese students: Passing Intermediate Chinese II',
+        credits: '8-16',
+      },
+    ],
   },
   {
     id: 'mathematics',
@@ -71,28 +120,7 @@ export const CORE_REQUIREMENTS = [
     category: 'core',
     coursesNeeded: 1,
     creditsNeeded: 4,
-    subcourses: [
-      { code: null, name: 'One 4-credit Math course or Math Placement Exam' },
-    ],
-  },
-  {
-    id: 'science',
-    label: 'Science',
-    category: 'core',
-    coursesNeeded: 2,
-    creditsNeeded: 8,
-    subcourses: [
-      {
-        code: null,
-        name: 'Experimental Discovery in the Natural World (ED)',
-        credits: '4 or 5',
-      },
-      {
-        code: null,
-        name: 'Science, Technology, and Society (STS)',
-        credits: 4,
-      },
-    ],
+    subcourses: [{ code: 'MATH-SHU 131', name: 'Calculus', credits: 4 }],
   },
   {
     id: 'algorithmic-thinking',
@@ -104,77 +132,107 @@ export const CORE_REQUIREMENTS = [
       {
         code: null,
         name: 'One 4-credit class from Algorithmic Thinking (AT) category',
+        credits: 4,
       },
     ],
+    majorFulfillment: {
+      cs: 'Fulfilled by Major Coursework',
+    },
   },
   {
-    id: 'language',
-    label: 'Language',
-    category: 'language',
-    coursesNeeded: 4,
-    creditsNeeded: 16,
+    id: 'science',
+    label: 'Science',
+    category: 'core',
+    coursesNeeded: 2,
+    creditsNeeded: 8,
     subcourses: [
       {
-        code: 'ENGL-SHU 100/101',
-        name: 'For Chinese students: English for Academic Purposes (EAP)',
-        credits: 8,
+        code: null,
+        name: 'Experimental Discovery in the Natural World (ED)',
+        credits: 4,
       },
       {
-        code: 'CHIN-SHU 101–202',
-        name: 'For non-Chinese students: Passing Intermediate Chinese II',
-        credits: '0-16',
+        code: null,
+        name: 'Science, Technology, and Society (STS)',
+        credits: 4,
       },
     ],
   },
 ];
 
-// Major-specific requirements
+// ─── Major-specific requirements ───
 export const MAJOR_REQUIREMENTS = {
   cs: {
     label: 'Computer Science',
+    bulletin: 'AY 2025-26',
+    coursesNeeded: 12,
+    creditsNeeded: 48,
     requiredCourses: [
       {
         courseId: 'CSCI-SHU-101',
         label: 'Introduction to Computer and Data Science',
       },
-      {
-        courseIds: ['MATH-SHU-235', 'MATH-SHU-233', 'BUSF-SHU-101'],
-        label:
-          'Probability and Statistics / Honors Theory of Probability / Statistics for Business and Economics',
-      },
       { courseId: 'CSCI-SHU-210', label: 'Data Structures' },
-      { courseId: 'CSCI-SHU-2314', label: 'Discrete Math' },
-      {
-        courseIds: ['CENG-SHU-202', 'CSCI-SHU-350'],
-        label: 'Computer Architecture or Embedded Computer Systems',
-      },
-      { courseId: 'CSCI-SHU-220', label: 'Algorithms' },
       { courseId: 'CSCI-SHU-215', label: 'Operating Systems' },
+      { courseId: 'CSCI-SHU-220', label: 'Algorithms' },
+      { courseId: 'CSCI-SHU-2314', label: 'Discrete Mathematics' },
+    ],
+    selectOneCourses: [
+      {
+        label: 'Statistics Requirement',
+        courseIds: ['MATH-SHU-235', 'MATH-SHU-238', 'BUSF-SHU-101'],
+      },
+      {
+        label: 'Architecture Requirement',
+        courseIds: ['CENG-SHU-202', 'CSCI-SHU-350'],
+      },
     ],
     capstone: {
       courseId: 'CSCI-SHU-420',
       label: 'Computer Science Senior Project',
       notes: 'Fall Only',
     },
-    electivesNeeded: 2,
-    electiveCreditsNeeded: 8,
-    declarationNote:
-      'To officially declare CS, students must have a final grade of C or be currently enrolled in MATH-SHU 131 Calculus (or pass the "Place out of Calculus" exam) and CSCI-SHU 11 Introduction to Computer Programming (or CSCI-SHU 101 or pass the "Place Into Introduction to Computer and Data Science" Exam).',
-    softElectiveNote:
-      'Some CS Elective courses are considered "soft" CS courses — students can only take a maximum of one such course to fulfill the CS Elective requirement (e.g. INTM-SHU 231 Developing Web).',
+    electivesNeeded: 4,
+    electiveCreditsNeeded: 16,
+    otherElectiveCredits: '32-40',
+    notes:
+      'To officially declare CS, students must have a final grade of C, or be currently enrolled in MATH-SHU 131 Calculus (or pass the "Place out of Calculus" exam) and CSCI-SHU 11 Introduction to Computer Programming (or CSCI-SHU 101 or pass the "Place Into Introduction to Computer and Data Science" Exam). Some CS Elective courses are considered "soft" CS courses — students can only take a maximum of one such course to fulfill the CS Elective requirement (e.g. INTM-SHU 231 Developing Web).',
+    studyAwayNotes:
+      'Before studying abroad, students should complete: ICS, Data Structures, Probability & Statistics, Computer Architecture, and ideally Algorithms.',
   },
-  //   ds: { label: 'Data Science', coursesNeeded: 10, creditsNeeded: 40 },
-  //   econ: { label: 'Economics', coursesNeeded: 10, creditsNeeded: 40 },
-  //   business: { label: 'Business and Finance', coursesNeeded: 10, creditsNeeded: 40 },
-  //   math: { label: 'Honors Mathematics', coursesNeeded: 10, creditsNeeded: 40 },
 };
 
-// Course Catalog
+// ─── Minor-specific requirements ───
+export const MINOR_REQUIREMENTS = {
+  math: {
+    id: 'math',
+    label: 'Mathematics Minor',
+    coursesNeeded: 4,
+    description:
+      'Any four Math major courses can be counted towards the Math minor.',
+    coursePrefix: 'MATH-SHU',
+    excludedCourseIds: ['MATH-SHU-9', 'MATH-SHU-10', 'MATH-SHU-265'],
+    notes:
+      'The following courses cannot fulfill the Math minor requirement: MATH-SHU 9 Precalculus; MATH-SHU 10 Quantitative Reasoning; MATH-SHU 265 Linear Algebra and Differential Equation',
+  },
+};
+
+// ─── Course Catalog ───
 export const COURSE_CATALOG = [
+  // ═══ GPS ═══
+  {
+    id: 'CCSF-SHU-101L',
+    code: 'CCSF-SHU 101L',
+    name: 'Global Perspectives on Society',
+    credits: 4,
+    category: 'gps',
+    department: 'GPS',
+  },
+
   // ═══ WRITING ═══
   {
-    id: 'WRIT-SHU-101',
-    code: 'WRIT-SHU 101',
+    id: 'WRIT-SHU-102',
+    code: 'WRIT-SHU 102',
     name: 'Writing as Inquiry',
     credits: 4,
     category: 'writing',
@@ -239,7 +297,7 @@ export const COURSE_CATALOG = [
     department: 'Chinese',
   },
 
-  // ═══ ENGLISH FOR ACADEMIC PURPOSES (EAP) ═══
+  // ═══ ENGLISH (EAP) ═══
   {
     id: 'ENGL-SHU-100',
     code: 'ENGL-SHU 100',
@@ -257,71 +315,141 @@ export const COURSE_CATALOG = [
     department: 'English',
   },
 
-  // ═══ GPS (Global Perspectives on Society) ═══
+  // ═══ MATHEMATICS — Excluded from Minor ═══
   {
-    id: 'CCSF-SHU-101',
-    code: 'CCSF-SHU 101',
-    name: 'Global Perspectives on Society',
+    id: 'MATH-SHU-9',
+    code: 'MATH-SHU 9',
+    name: 'Precalculus',
     credits: 4,
-    category: 'gps',
-    department: 'GPS',
+    category: 'core',
+    department: 'Mathematics',
+  },
+  {
+    id: 'MATH-SHU-10',
+    code: 'MATH-SHU 10',
+    name: 'Quantitative Reasoning: Great Ideas in Mathematics',
+    credits: 4,
+    category: 'core',
+    department: 'Mathematics',
+  },
+  {
+    id: 'MATH-SHU-265',
+    code: 'MATH-SHU 265',
+    name: 'Linear Algebra and Differential Equation',
+    credits: 4,
+    category: 'core',
+    department: 'Mathematics',
   },
 
-  // --- MATHEMATICS
+  // ═══ CORE — MATHEMATICS ═══
   {
     id: 'MATH-SHU-131',
     code: 'MATH-SHU 131',
     name: 'Calculus',
     credits: 4,
-    category: 'major',
+    category: 'core',
     department: 'Mathematics',
-    majors: ['cs', 'ds', 'math', 'physics', 'econ'],
-  },
-  {
-    id: 'MATH-SHU-121',
-    code: 'MATH-SHU 121',
-    name: 'Honors Calculus I',
-    credits: 4,
-    category: 'major',
-    department: 'Mathematics',
-    majors: ['math'],
-  },
-  {
-    id: 'MATH-SHU-122',
-    code: 'MATH-SHU 122',
-    name: 'Honors Calculus II',
-    credits: 4,
-    category: 'major',
-    department: 'Mathematics',
-    majors: ['math'],
   },
   {
     id: 'MATH-SHU-140',
     code: 'MATH-SHU 140',
     name: 'Linear Algebra',
     credits: 4,
-    category: 'major',
+    category: 'core',
     department: 'Mathematics',
-    majors: ['cs', 'ds', 'math', 'physics'],
+    prerequisiteNote: 'Grade C or better in Calculus',
   },
   {
-    id: 'MATH-SHU-201',
-    code: 'MATH-SHU 201',
+    id: 'MATH-SHU-151',
+    code: 'MATH-SHU 151',
     name: 'Multivariable Calculus',
     credits: 4,
-    category: 'major',
+    category: 'core',
     department: 'Mathematics',
-    majors: ['cs', 'ds', 'math', 'physics'],
   },
+
+  // ═══ CORE — ALGORITHMIC THINKING (CS prerequisite) ═══
   {
-    id: 'MATH-SHU-233',
-    code: 'MATH-SHU 233',
-    name: 'Honors Theory of Probability',
+    id: 'CSCI-SHU-11',
+    code: 'CSCI-SHU 11',
+    name: 'Introduction to Computer Programming',
+    credits: 4,
+    category: 'core',
+    department: 'Computer Science',
+    prerequisiteNote:
+      'C in Precalculus or pass Calculus placement test (Shanghai portal students only)',
+  },
+
+  // ═══ CS MAJOR — REQUIRED ═══
+  {
+    id: 'CSCI-SHU-101',
+    code: 'CSCI-SHU 101',
+    name: 'Introduction to Computer and Data Science',
     credits: 4,
     category: 'major',
-    department: 'Mathematics',
-    majors: ['cs', 'ds', 'math'],
+    department: 'Computer Science',
+    csRole: 'required',
+    prerequisites: ['CSCI-SHU-11'],
+    prerequisiteNote: 'CSCI-SHU 11 or placement exam',
   },
+  {
+    id: 'CSCI-SHU-210',
+    code: 'CSCI-SHU 210',
+    name: 'Data Structures',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'required',
+    prerequisites: ['CSCI-SHU-101'],
+    prerequisiteNote: 'ICS or A- in ICP',
+  },
+  {
+    id: 'CSCI-SHU-2314',
+    code: 'CSCI-SHU 2314',
+    name: 'Discrete Mathematics',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'required',
+    prerequisiteNote:
+      'Co-requisite or Pre-requisite: MATH-SHU 131 Calculus or MATH-SHU 201 Honors Calculus',
+  },
+  {
+    id: 'CSCI-SHU-220',
+    code: 'CSCI-SHU 220',
+    name: 'Algorithms',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'required',
+    prerequisites: ['CSCI-SHU-210'],
+    prerequisiteNote:
+      'Data Structures AND (Discrete Math OR Linear Algebra OR Honors Linear Algebra)',
+  },
+  {
+    id: 'CSCI-SHU-215',
+    code: 'CSCI-SHU 215',
+    name: 'Operating Systems',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'required',
+    prerequisites: ['CENG-SHU-202'],
+    prerequisiteNote:
+      'CENG-SHU 202 Computer Architecture or Computer Systems Organization',
+  },
+  {
+    id: 'CSCI-SHU-420',
+    code: 'CSCI-SHU 420',
+    name: 'Computer Science Senior Project',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'capstone',
+    prerequisiteNote: 'Fall Only',
+  },
+
+  // ═══ CS MAJOR — SELECT ONE (Statistics) ═══
   {
     id: 'MATH-SHU-235',
     code: 'MATH-SHU 235',
@@ -329,65 +457,45 @@ export const COURSE_CATALOG = [
     credits: 4,
     category: 'major',
     department: 'Mathematics',
-    majors: ['cs', 'ds', 'econ', 'business'],
+    csRole: 'required',
+    prerequisites: ['MATH-SHU-131'],
+    prerequisiteNote:
+      'Grade C or better in MATH-SHU 131 Calculus or MATH-SHU 201 Honors Calculus. Anti-requisite: MATH-SHU 238.',
   },
   {
-    id: 'MATH-SHU-261',
-    code: 'MATH-SHU 261',
-    name: 'Discrete Mathematics',
+    id: 'MATH-SHU-238',
+    code: 'MATH-SHU 238',
+    name: 'Honors Theory of Probability',
     credits: 4,
     category: 'major',
     department: 'Mathematics',
-    majors: ['math'],
+    csRole: 'required',
+    prerequisites: ['MATH-SHU-151', 'MATH-SHU-140'],
+    prerequisiteNote:
+      'Grade C or better in Multivariable Calculus or Honors Analysis II, AND Grade C or better in Linear Algebra or Honors Linear Algebra I.',
   },
   {
-    id: 'MATH-SHU-263',
-    code: 'MATH-SHU 263',
-    name: 'Ordinary Differential Equations',
+    id: 'BUSF-SHU-101',
+    code: 'BUSF-SHU 101',
+    name: 'Statistics for Business and Economics',
     credits: 4,
     category: 'major',
-    department: 'Mathematics',
-    majors: ['math', 'physics'],
-  },
-  {
-    id: 'MATH-SHU-328',
-    code: 'MATH-SHU 328',
-    name: 'Honors Analysis I',
-    credits: 4,
-    category: 'major',
-    department: 'Mathematics',
-    majors: ['math'],
-  },
-  {
-    id: 'MATH-SHU-329',
-    code: 'MATH-SHU 329',
-    name: 'Honors Analysis II',
-    credits: 4,
-    category: 'major',
-    department: 'Mathematics',
-    majors: ['math'],
-  },
-  {
-    id: 'MATH-SHU-340',
-    code: 'MATH-SHU 340',
-    name: 'Honors Algebra I',
-    credits: 4,
-    category: 'major',
-    department: 'Mathematics',
-    majors: ['math'],
-  },
-  {
-    id: 'MATH-SHU-341',
-    code: 'MATH-SHU 341',
-    name: 'Honors Algebra II',
-    credits: 4,
-    category: 'major',
-    department: 'Mathematics',
-    majors: ['math'],
+    department: 'Business and Finance',
+    csRole: 'required',
   },
 
-  // --- COMPUTER SCIENCE
-  // Electives
+  // ═══ CS MAJOR — SELECT ONE (Architecture) ═══
+  {
+    id: 'CENG-SHU-202',
+    code: 'CENG-SHU 202',
+    name: 'Computer Architecture',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'required',
+    prerequisites: ['CSCI-SHU-101'],
+    prerequisiteNote: 'CSCI-SHU 101 ICS or CSCI-SHU 11 ICP',
+  },
   {
     id: 'CSCI-SHU-350',
     code: 'CSCI-SHU 350',
@@ -395,8 +503,10 @@ export const COURSE_CATALOG = [
     credits: 4,
     category: 'major',
     department: 'Computer Science',
-    majors: ['cs'],
+    csRole: 'required',
   },
+
+  // ═══ CS MAJOR — ELECTIVES (select 4) ═══
   {
     id: 'CSCI-SHU-308',
     code: 'CSCI-SHU 308',
@@ -404,7 +514,31 @@ export const COURSE_CATALOG = [
     credits: 4,
     category: 'major',
     department: 'Computer Science',
-    majors: ['cs'],
+    csRole: 'elective',
+    prerequisites: ['CSCI-SHU-101'],
+    prerequisiteNote: 'CSCI-SHU 101 Intro to Computer Science',
+  },
+  {
+    id: 'CSCI-SHU-213',
+    code: 'CSCI-SHU 213',
+    name: 'Databases',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'elective',
+    prerequisites: ['CSCI-SHU-210'],
+    prerequisiteNote: 'CSCI-SHU 210 Data Structures',
+  },
+  {
+    id: 'CSCI-SHU-254',
+    code: 'CSCI-SHU 254',
+    name: 'Distributed Systems',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'elective',
+    prerequisites: ['CENG-SHU-202'],
+    prerequisiteNote: 'CENG-SHU 202 Computer Architecture',
   },
   {
     id: 'CSCI-SHU-360',
@@ -413,85 +547,205 @@ export const COURSE_CATALOG = [
     credits: 4,
     category: 'major',
     department: 'Computer Science',
-    majors: ['cs', 'ds'],
+    csRole: 'elective',
+    prerequisiteNote:
+      'ICP, Calculus, Probability and Statistics OR Theory of Probability OR Statistics for Business and Economics OR Linear Algebra',
   },
   {
-    id: 'CSCI-SHU-361',
-    code: 'CSCI-SHU 361',
-    name: 'Computer Security',
-    credits: 4,
-    category: 'major',
-    department: 'Computer Science',
-    majors: ['cs'],
-  },
-  {
-    id: 'CSCI-SHU-400',
-    code: 'CSCI-SHU 400',
-    name: 'Software Engineering',
-    credits: 4,
-    category: 'major',
-    department: 'Computer Science',
-    majors: ['cs'],
-  },
-  {
-    id: 'CSCI-SHU-410',
-    code: 'CSCI-SHU 410',
-    name: 'Database Systems',
-    credits: 4,
-    category: 'major',
-    department: 'Computer Science',
-    majors: ['cs', 'ds'],
-  },
-  {
-    id: 'CSCI-SHU-480',
-    code: 'CSCI-SHU 480',
-    name: 'Computer Vision',
-    credits: 4,
-    category: 'major',
-    department: 'Computer Science',
-    majors: ['cs'],
-  },
-  {
-    id: 'CSCI-SHU-490',
-    code: 'CSCI-SHU 490',
+    id: 'CSCI-SHU-376',
+    code: 'CSCI-SHU 376',
     name: 'Natural Language Processing',
     credits: 4,
     category: 'major',
     department: 'Computer Science',
-    majors: ['cs', 'ds'],
+    csRole: 'elective',
+    prerequisites: ['CSCI-SHU-11'],
+    prerequisiteNote:
+      'CSCI-SHU 11 ICP and (CSCI-SHU 360 Machine Learning or MATH-SHU 235 Prob & Stats or MATH-SHU 238 Theory of Probability)',
   },
-
-  //   // ═══ DATA SCIENCE ═══
-  //   { id: 'DATS-SHU-101', code: 'DATS-SHU 101', name: 'Introduction to Data Science', credits: 4, category: 'major', department: 'Data Science', majors: ['ds'] },
-  //   { id: 'DATS-SHU-210', code: 'DATS-SHU 210', name: 'Data Mining', credits: 4, category: 'major', department: 'Data Science', majors: ['ds'] },
-  //   { id: 'DATS-SHU-235', code: 'DATS-SHU 235', name: 'Statistical Inference', credits: 4, category: 'major', department: 'Data Science', majors: ['ds'] },
-  //   { id: 'DATS-SHU-301', code: 'DATS-SHU 301', name: 'Deep Learning', credits: 4, category: 'major', department: 'Data Science', majors: ['ds', 'cs'] },
-  //   { id: 'DATS-SHU-400', code: 'DATS-SHU 400', name: 'Capstone Project in Data Science', credits: 4, category: 'major', department: 'Data Science', majors: ['ds'] },
-
-  //   // ═══ ECONOMICS ═══
-  //   { id: 'ECON-SHU-1', code: 'ECON-SHU 1', name: 'Intro to Microeconomics', credits: 4, category: 'major', department: 'Economics', majors: ['econ', 'business'] },
-  //   { id: 'ECON-SHU-2', code: 'ECON-SHU 2', name: 'Intro to Macroeconomics', credits: 4, category: 'major', department: 'Economics', majors: ['econ', 'business'] },
-  //   { id: 'ECON-SHU-10', code: 'ECON-SHU 10', name: 'Intermediate Microeconomics', credits: 4, category: 'major', department: 'Economics', majors: ['econ'] },
-  //   { id: 'ECON-SHU-11', code: 'ECON-SHU 11', name: 'Intermediate Macroeconomics', credits: 4, category: 'major', department: 'Economics', majors: ['econ'] },
-  //   { id: 'ECON-SHU-301', code: 'ECON-SHU 301', name: 'Econometrics', credits: 4, category: 'major', department: 'Economics', majors: ['econ'] },
-  //   { id: 'ECON-SHU-303', code: 'ECON-SHU 303', name: 'International Trade', credits: 4, category: 'major', department: 'Economics', majors: ['econ'] },
-  //   { id: 'ECON-SHU-310', code: 'ECON-SHU 310', name: 'Game Theory', credits: 4, category: 'major', department: 'Economics', majors: ['econ'] },
-  //   { id: 'ECON-SHU-320', code: 'ECON-SHU 320', name: 'Development Economics', credits: 4, category: 'major', department: 'Economics', majors: ['econ'] },
-  //   { id: 'ECON-SHU-330', code: 'ECON-SHU 330', name: 'Public Economics', credits: 4, category: 'major', department: 'Economics', majors: ['econ'] },
-  //   { id: 'ECON-SHU-340', code: 'ECON-SHU 340', name: 'Labor Economics', credits: 4, category: 'major', department: 'Economics', majors: ['econ'] },
-
-  //   // ═══ BUSINESS & FINANCE ═══
-  //   { id: 'BUSF-SHU-101', code: 'BUSF-SHU 101', name: 'Statistics for Business and Economics', credits: 4, category: 'major', department: 'Business and Finance', majors: ['business', 'cs'] },
-  //   { id: 'BUSF-SHU-200', code: 'BUSF-SHU 200', name: 'Foundations of Finance', credits: 4, category: 'major', department: 'Business and Finance', majors: ['business'] },
-  //   { id: 'BUSF-SHU-210', code: 'BUSF-SHU 210', name: 'Managerial Accounting', credits: 4, category: 'major', department: 'Business and Finance', majors: ['business'] },
-  //   { id: 'BUSF-SHU-250', code: 'BUSF-SHU 250', name: 'Corporate Finance', credits: 4, category: 'major', department: 'Business and Finance', majors: ['business'] },
-  //   { id: 'BUSF-SHU-260', code: 'BUSF-SHU 260', name: 'Marketing', credits: 4, category: 'major', department: 'Business and Finance', majors: ['business'] },
-  //   { id: 'BUSF-SHU-300', code: 'BUSF-SHU 300', name: 'Investments', credits: 4, category: 'major', department: 'Business and Finance', majors: ['business'] },
-  //   { id: 'BUSF-SHU-310', code: 'BUSF-SHU 310', name: 'Entrepreneurial Finance', credits: 4, category: 'major', department: 'Business and Finance', majors: ['business'] },
-  //   { id: 'BUSF-SHU-320', code: 'BUSF-SHU 320', name: 'International Finance', credits: 4, category: 'major', department: 'Business and Finance', majors: ['business'] },
+  {
+    id: 'CSCI-SHU-205',
+    code: 'CSCI-SHU 205',
+    name: 'Topics in Computer Science',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'elective',
+    prerequisites: ['CSCI-SHU-101'],
+    prerequisiteNote: 'CSCI-SHU 101 Introduction to Computer and Data Science',
+  },
+  {
+    id: 'CSCI-SHU-200',
+    code: 'CSCI-SHU 200',
+    name: 'Topics in Human-Computer Interaction',
+    credits: 4,
+    category: 'major',
+    department: 'Computer Science',
+    csRole: 'elective',
+    prerequisites: ['CSCI-SHU-101'],
+    prerequisiteNote: 'CSCI-SHU 101 Introduction to Computer Science',
+  },
+  {
+    id: 'DATS-SHU-377',
+    code: 'DATS-SHU 377',
+    name: 'Computer Vision',
+    credits: 4,
+    category: 'major',
+    department: 'Data Science',
+    csRole: 'elective',
+    prerequisites: ['CSCI-SHU-11'],
+    prerequisiteNote:
+      'CSCI-SHU 11 ICP and (CSCI-SHU 360 Machine Learning or MATH-SHU 235 Prob & Stats or MATH-SHU 238 Theory of Probability)',
+  },
+  {
+    id: 'DATS-SHU-235',
+    code: 'DATS-SHU 235',
+    name: 'Information Visualization',
+    credits: 4,
+    category: 'major',
+    department: 'Data Science',
+    csRole: 'elective',
+    prerequisites: ['CSCI-SHU-210'],
+    prerequisiteNote: 'Prereq or coreq: CSCI-SHU 210 Data Structures',
+  },
+  {
+    id: 'DATS-SHU-369',
+    code: 'DATS-SHU 369',
+    name: 'Machine Learning with Graphs',
+    credits: 4,
+    category: 'major',
+    department: 'Data Science',
+    csRole: 'elective',
+    prerequisites: ['CSCI-SHU-360'],
+    prerequisiteNote:
+      'CSCI-SHU 360 Machine Learning or MATH-SHU 235 Probability and Statistics',
+  },
 ];
 
-// Get departments for filtering
+// ─── Sample 4-Year Plans ───
+export const SAMPLE_PLANS = {
+  cs: [
+    {
+      id: 'cs-away-jr-fall',
+      label: 'Study Away Junior Fall',
+      semesters: {
+        'Y1-Fall': [
+          {
+            courseId: 'CCSF-SHU-101L',
+            label: 'Global Perspectives on Society',
+          },
+          { courseId: 'MATH-SHU-131', label: 'Calculus' },
+          { label: 'Core Class (ICP/ICS)' },
+          { label: 'English, Chinese, Core or General Elective' },
+        ],
+        'Y1-Spring': [
+          { courseId: 'WRIT-SHU-102', label: 'Writing as Inquiry' },
+          { label: 'Core Class' },
+          { label: 'ICS or Data Structures' },
+          { label: 'English, Chinese, Core or General Elective' },
+        ],
+        'Y2-Fall': [
+          { courseId: 'WRIT-SHU-201', label: 'Perspectives on the Humanities' },
+          { label: 'Data Structures or CS Elective' },
+          { courseId: 'CSCI-SHU-2314', label: 'Discrete Mathematics' },
+          { label: 'Probability and Statistics or alternate' },
+        ],
+        'Y2-Spring': [
+          { label: 'Core, General Elective, or Chinese' },
+          { courseId: 'CSCI-SHU-220', label: 'Algorithms' },
+          { courseId: 'CENG-SHU-202', label: 'Computer Architecture' },
+          { label: 'Core, General Elective, or Chinese' },
+        ],
+        'Y3-Fall': [
+          { label: 'Core or General Elective' },
+          { label: 'CS Elective' },
+          { label: 'CS Elective' },
+          { label: 'General Elective' },
+        ],
+        'Y3-Spring': [
+          { label: 'Core or General Elective' },
+          { label: 'CS Elective' },
+          { label: 'CS Elective' },
+          { label: 'General Elective' },
+        ],
+        'Y4-Fall': [
+          { courseId: 'CSCI-SHU-215', label: 'Operating Systems' },
+          { courseId: 'CSCI-SHU-420', label: 'Senior Project' },
+          { label: 'General Elective' },
+          { label: 'General Elective' },
+        ],
+        'Y4-Spring': [
+          { label: 'Core or General Elective' },
+          { label: 'Core or General Elective' },
+          { label: 'General Elective' },
+          { label: 'General Elective' },
+        ],
+      },
+    },
+    {
+      id: 'cs-away-jr-spring',
+      label: 'Study Away Junior Spring',
+      semesters: {
+        'Y1-Fall': [
+          {
+            courseId: 'CCSF-SHU-101L',
+            label: 'Global Perspectives on Society',
+          },
+          { courseId: 'MATH-SHU-131', label: 'Calculus' },
+          { label: 'Core Class' },
+          { label: 'English, Chinese, Core or General Elective' },
+        ],
+        'Y1-Spring': [
+          { courseId: 'WRIT-SHU-102', label: 'Writing as Inquiry' },
+          { label: 'Core Class (ICP)' },
+          { label: 'Core or General Elective' },
+          { label: 'English, Chinese, Core or General Elective' },
+        ],
+        'Y2-Fall': [
+          { courseId: 'WRIT-SHU-201', label: 'Perspectives on the Humanities' },
+          {
+            courseId: 'CSCI-SHU-101',
+            label: 'Intro to Computer and Data Science',
+          },
+          { courseId: 'CSCI-SHU-2314', label: 'Discrete Mathematics' },
+          { label: 'Core, General Elective, or Chinese' },
+        ],
+        'Y2-Spring': [
+          { label: 'CS Elective' },
+          { courseId: 'CSCI-SHU-210', label: 'Data Structures' },
+          { courseId: 'CENG-SHU-202', label: 'Computer Architecture' },
+          { label: 'Core, General Elective, or Chinese' },
+        ],
+        'Y3-Fall': [
+          { label: 'Core or General Elective' },
+          { label: 'CS Elective' },
+          { label: 'Probability & Statistics or alternate' },
+          { label: 'General Elective' },
+        ],
+        'Y3-Spring': [
+          { courseId: 'CSCI-SHU-220', label: 'Algorithms' },
+          { label: 'CS Elective' },
+          { label: 'Core or General Elective' },
+          { label: 'CS Elective' },
+        ],
+        'Y4-Fall': [
+          { courseId: 'CSCI-SHU-215', label: 'Operating Systems' },
+          { label: 'CS Elective' },
+          { courseId: 'CSCI-SHU-420', label: 'Senior Project' },
+          { label: 'General Elective' },
+        ],
+        'Y4-Spring': [
+          { label: 'Core or General Elective' },
+          { label: 'Core or General Elective' },
+          { label: 'General Elective' },
+          { label: 'General Elective' },
+        ],
+      },
+    },
+  ],
+};
+
+// Derived data
 export const DEPARTMENTS = [
   ...new Set(COURSE_CATALOG.map((c) => c.department)),
 ].sort();

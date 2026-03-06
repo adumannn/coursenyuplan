@@ -4,6 +4,7 @@ import {
   COURSE_CATALOG,
   CORE_REQUIREMENTS,
   MAJOR_REQUIREMENTS,
+  MINOR_REQUIREMENTS,
   GRADUATION_CREDITS,
 } from '../data/courses';
 
@@ -40,14 +41,28 @@ export default function usePlanner() {
 
   const [plan, setPlan] = useState(() => stored?.plan || createEmptyPlan());
   const [major, setMajor] = useState(() => stored?.major || 'cs');
+  const [selectedMinors, setSelectedMinors] = useState(
+    () => stored?.selectedMinors || [],
+  );
   const [studentName, setStudentName] = useState(
     () => stored?.studentName || '',
   );
 
   // Persist to localStorage on changes
   useEffect(() => {
-    saveToStorage({ plan, major, studentName });
-  }, [plan, major, studentName]);
+    saveToStorage({ plan, major, selectedMinors, studentName });
+  }, [plan, major, selectedMinors, studentName]);
+
+  const addMinor = useCallback((minorId) => {
+    setSelectedMinors((prev) => {
+      if (prev.includes(minorId)) return prev;
+      return [...prev, minorId];
+    });
+  }, []);
+
+  const removeMinor = useCallback((minorId) => {
+    setSelectedMinors((prev) => prev.filter((id) => id !== minorId));
+  }, []);
 
   const addCourse = useCallback((semesterId, course) => {
     setPlan((prev) => {
@@ -149,8 +164,35 @@ export default function usePlanner() {
       creditsTaken: electiveCourses.reduce((sum, c) => sum + c.credits, 0),
     };
 
+    // Minor requirements
+    selectedMinors.forEach((minorId) => {
+      const minorReq = MINOR_REQUIREMENTS[minorId];
+      if (!minorReq) return;
+      const eligible = allPlannedCourses.filter((c) => {
+        const idPrefix = minorReq.coursePrefix
+          ? c.id.startsWith(minorReq.coursePrefix + '-')
+          : false;
+        if (!idPrefix) return false;
+        if (minorReq.excludedCourseIds?.includes(c.id)) return false;
+        return true;
+      });
+      progress[`minor-${minorId}`] = {
+        id: `minor-${minorId}`,
+        label: minorReq.label,
+        category: 'minor',
+        coursesNeeded: minorReq.coursesNeeded,
+        creditsNeeded: minorReq.coursesNeeded * 4,
+        coursesTaken: eligible.length,
+        creditsTaken: eligible.reduce((sum, c) => sum + c.credits, 0),
+        fulfilled: eligible.length >= minorReq.coursesNeeded,
+        description: minorReq.description,
+        notes: minorReq.notes,
+        matchedCourses: eligible.map((c) => c.code),
+      };
+    });
+
     return progress;
-  }, [allPlannedCourses, major]);
+  }, [allPlannedCourses, major, selectedMinors]);
 
   // Check if a course is already planned somewhere
   const isCourseInPlan = useCallback(
@@ -164,6 +206,9 @@ export default function usePlanner() {
     plan,
     major,
     setMajor,
+    selectedMinors,
+    addMinor,
+    removeMinor,
     studentName,
     setStudentName,
     addCourse,

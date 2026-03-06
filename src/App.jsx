@@ -12,6 +12,9 @@ function App() {
     plan,
     major,
     setMajor,
+    selectedMinors,
+    addMinor,
+    removeMinor,
     studentName,
     setStudentName,
     addCourse,
@@ -41,6 +44,9 @@ function App() {
       <Header
         major={major}
         setMajor={setMajor}
+        selectedMinors={selectedMinors}
+        addMinor={addMinor}
+        removeMinor={removeMinor}
         studentName={studentName}
         setStudentName={setStudentName}
         totalCredits={totalCredits}
