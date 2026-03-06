@@ -1,5 +1,29 @@
+// ────────────────────────────────────────────────────────────
 // NYU Shanghai Course Planner — Data
-// Based on AY 2025-26 Academic Bulletin (CS Major)
+// ────────────────────────────────────────────────────────────
+//
+// CONTRIBUTING — How to add a new Major or Minor:
+//
+// 1. MAJOR:
+//    a) Add an entry to the MAJORS array  → { id: 'xyz', label: 'Your Major' }
+//    b) Add a matching key in MAJOR_REQUIREMENTS.xyz with coursesNeeded, creditsNeeded, etc.
+//    c) In COURSE_CATALOG, tag courses with  majorRoles: { xyz: 'required' | 'elective' | 'capstone' }
+//       A course can serve multiple majors: majorRoles: { cs: 'elective', ds: 'required' }
+//
+// 2. MINOR:
+//    a) Add an entry to AVAILABLE_MINORS   → { id: 'abc', label: 'Your Minor' }
+//    b) Add a matching key in MINOR_REQUIREMENTS.abc — see the math example.
+//       You can use EITHER:
+//         • coursePrefix  — auto-matches all catalog courses whose id starts with that prefix
+//         • includedCourseIds — explicit list of course ids that count
+//       Both support excludedCourseIds to blacklist specific courses.
+//
+// 3. COURSES:
+//    Each course needs at minimum: id, code, name, credits, category, department.
+//    Optional fields: prerequisites, prerequisiteNote, majorRoles.
+//
+// All data sourced from the NYU Shanghai Academic Bulletin.
+// ────────────────────────────────────────────────────────────
 
 export const CATEGORIES = {
   core: { label: 'Core', color: '#57068c' },
@@ -43,16 +67,19 @@ export const STUDY_AWAY = {
 
 export const MAJORS = [
   { id: 'cs', label: 'Computer Science' },
-  // TODO: implement remaining majors
-  // { id: 'ds', label: 'Data Science' },
-  // { id: 'econ', label: 'Economics' },
+  // ↓ Uncomment or add new majors here. Then define their requirements
+  //   in MAJOR_REQUIREMENTS and tag courses with majorRoles: { id: 'required'|'elective' }
+  // { id: 'ds',       label: 'Data Science' },
+  // { id: 'econ',     label: 'Economics' },
   // { id: 'business', label: 'Business and Finance' },
-  // { id: 'math', label: 'Honors Mathematics' },
+  // { id: 'math',     label: 'Honors Mathematics' },
 ];
 
 export const AVAILABLE_MINORS = [
   { id: 'math', label: 'Mathematics' },
-  // Add more minors here as needed. just google the name of your"major/minor" + "nyu shanghai course requirements" and fill in the details in the MINOR_REQUIREMENTS object below.
+  // ↓ Add new minors here. Then define matching rules in MINOR_REQUIREMENTS.
+  // { id: 'cs',   label: 'Computer Science' },
+  // { id: 'econ', label: 'Economics' },
 ];
 
 export const GRADUATION_CREDITS = 128;
@@ -203,6 +230,14 @@ export const MAJOR_REQUIREMENTS = {
 };
 
 // ─── Minor-specific requirements ───
+// Each minor needs:
+//   id, label, coursesNeeded
+//   Matching strategy (pick one or both):
+//     • coursePrefix:       auto-match courses whose id starts with this prefix
+//     • includedCourseIds:  explicit allow-list of course ids
+//   Optional:
+//     • excludedCourseIds:  courses to skip even if they match the prefix
+//     • description, notes: shown in the sidebar
 export const MINOR_REQUIREMENTS = {
   math: {
     id: 'math',
@@ -215,6 +250,15 @@ export const MINOR_REQUIREMENTS = {
     notes:
       'The following courses cannot fulfill the Math minor requirement: MATH-SHU 9 Precalculus; MATH-SHU 10 Quantitative Reasoning; MATH-SHU 265 Linear Algebra and Differential Equation',
   },
+  // Example — explicit id list approach (uncomment to use):
+  // econ: {
+  //   id: 'econ',
+  //   label: 'Economics Minor',
+  //   coursesNeeded: 5,
+  //   description: 'Five Economics courses…',
+  //   includedCourseIds: ['ECON-SHU-1', 'ECON-SHU-2', ...],
+  //   excludedCourseIds: [],
+  // },
 };
 
 // ─── Course Catalog ───
@@ -389,6 +433,7 @@ export const COURSE_CATALOG = [
     category: 'major',
     department: 'Computer Science',
     csRole: 'required',
+    // majorRoles: { cs: 'required' },  — same meaning, generic form
     prerequisites: ['CSCI-SHU-11'],
     prerequisiteNote: 'CSCI-SHU 11 or placement exam',
   },

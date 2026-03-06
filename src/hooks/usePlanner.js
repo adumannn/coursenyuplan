@@ -168,13 +168,21 @@ export default function usePlanner() {
     selectedMinors.forEach((minorId) => {
       const minorReq = MINOR_REQUIREMENTS[minorId];
       if (!minorReq) return;
+
       const eligible = allPlannedCourses.filter((c) => {
-        const idPrefix = minorReq.coursePrefix
-          ? c.id.startsWith(minorReq.coursePrefix + '-')
-          : false;
-        if (!idPrefix) return false;
+        // Skip explicitly excluded courses
         if (minorReq.excludedCourseIds?.includes(c.id)) return false;
-        return true;
+
+        // Strategy 1: prefix-based matching (e.g. all MATH-SHU-* courses)
+        if (minorReq.coursePrefix && c.id.startsWith(minorReq.coursePrefix + '-')) {
+          return true;
+        }
+        // Strategy 2: explicit allow-list
+        if (minorReq.includedCourseIds?.includes(c.id)) {
+          return true;
+        }
+
+        return false;
       });
       progress[`minor-${minorId}`] = {
         id: `minor-${minorId}`,
